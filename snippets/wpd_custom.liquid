@@ -1,0 +1,93 @@
+  {% if customer.tags contains 'wpdnet' %}
+<style>
+  button[name="checkout"],#dynamic-checkout-cart{
+    display:none!important
+  }
+</style>
+    {% endif %}
+
+    {% if canonical_url contains '/cart' %}
+        <style>
+            input::placeholder,  textarea::placeholder {
+              color: gray !important;
+            }
+        </style>
+    {% endif %}
+
+
+    {% assign wcp_wholesale_customer = false %}
+{% if shop.metafields.wcp_status.wcp_status != 'disabled' and customer %}
+{% assign active_discounts = shop.metafields.wcp_active_discounts.wcp_active_discounts %}
+{% assign active_discounts_array = active_discounts | split: ',' %}
+{% assign customer_tags = blank %}
+{% for tag in customer.tags %}
+{% assign tempTag = tag | downcase %}
+{% assign customer_tags = customer_tags | prepend:tempTag %}
+{% unless forloop.last %}
+{% assign customer_tags = customer_tags | prepend:',' %}
+{% endunless %}
+{% endfor %}
+{% assign customer_tags = customer_tags | split:',' %}
+{% assign active_discounts = active_discounts | downcase %}
+{% for discount_key in active_discounts_array %}
+{% assign key_split = discount_key | split: '-' %}
+{% assign key_split_length = key_split | size %}
+{% if key_split_length > 2 %}
+{% assign removeable_key = key_split.last | prepend: '-' %}
+{% assign wcp_customer_tag = discount_key | remove_last: removeable_key %}
+{% else %}
+{% assign wcp_customer_tag = key_split[0] %}
+{% endif %}
+{% assign wcp_customer_tag = wcp_customer_tag | downcase %}
+{% if customer_tags contains wcp_customer_tag %}
+{% assign wcp_wholesale_customer = true %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+
+
+{% if wcp_wholesale_customer == true %}
+
+<style>
+  .view-cart-button {
+    border: 1px solid var(--outline-button-label, var(--color-accent));
+    background: transparent;
+    display: inline-flex;
+    cursor: pointer;
+    padding: 7px 30px;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    font-size: .875rem;
+    font-weight: var(--font-body-bold-weight, 600);
+    letter-spacing: var(--button-letter-spacing, .02em);
+    border: 1px solid var(--solid-button-background, var(--color-accent));
+    background: var(--solid-button-background, var(--color-accent));
+    color: var(--solid-button-label, #fff);
+    border-radius: var(--button-border-radius, 0px);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-transform: unset !important;
+    transition: color .25s cubic-bezier(.104,.204,.492,1), background-color .25s cubic-bezier(.104,.204,.492,1), border-color .25s cubic-bezier(.104,.204,.492,1);
+}
+  .view-cart-button:hover {
+      color: var(--solid-button-label, #fff) !important;
+  }
+    button#wcp-30-open:hover::before {
+        z-index: -1;
+    }
+</style>
+<script>
+  if(document.querySelector('#wpdNetShippingNotes')){
+    document.querySelector('#wpdNetShippingNotes').placeholder = 'Please indicate your preferred carrier, shipping service, etc here. If you prefer to ship using your preferred carrier, please provide a third party account number for freight charges to billed to. Otherwise, Thrive will ship best-way using FedEx Ground and will ADD shipping charges to your invoice.'
+  }
+</script>
+{% endif %}
+
+

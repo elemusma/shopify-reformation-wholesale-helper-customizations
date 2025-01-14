@@ -37,7 +37,7 @@
 	{%- unless product.price_varies == false and product.compare_at_price_varies %}
 		{% if compare_at_price != null and compare_at_price != 0 and price != compare_at_price %}
 			<del>
-				<span class="amount">
+				<span class="amount data-wpd-hide">
 					{% if settings.currency_code_enabled %}
 						{{ compare_at_price | money_with_currency }}
 					{% else %}
@@ -47,7 +47,12 @@
 			</del>
 		{% endif %}
 	{%- endunless -%}
-	<ins><span class="amount {{ discounted_class }}">{{ money_price }}</span></ins>
+	<ins><span class="amount {{ discounted_class }}" data-wpd-product-handle="{{ product.handle }}"         
+        data-wpd-variant-id="{{ product.selected_or_first_available_variant.id }}"         
+        data-wpd-variant-price="{{ product.selected_or_first_available_variant.price }}"        
+        data-wpd-variant-compare-at-price="{{ product.selected_or_first_available_variant.compare_at_price }}"
+        data-wpd-product-collection-ids="{% assign wpdProductCollectionIds = product.collections | map:'id' %}{{ wpdProductCollectionIds | join:',' }}"        
+        data-wpd-product-id="{{ product.id }}">{{ money_price }}</span></ins>
 	<small class="unit-price {% if product.selected_or_first_available_variant.unit_price_measurement == nil %} hidden{% endif %}">
 		<span>{{- product.selected_or_first_available_variant.unit_price | money -}}</span>
     <span class="unit-price-separator">/</span>
@@ -66,7 +71,7 @@
 			{%- elsif settings.sale_badge_type == 'save_percentage' -%}
 				{%- capture saved_amount -%}{{ compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round }}%{%- endcapture -%}
 			{%- endif -%}
-			<span class="badge onsale">
+			<span class="badge onsale data-wpd-hide">
 				{%- if settings.sale_badge_type == 'sale' -%}
 				{{ 'products.product.on_sale' | t }}
 				{%- else -%}
