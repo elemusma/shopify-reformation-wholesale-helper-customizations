@@ -4,6 +4,29 @@
 		<div class="small-12 columns">
 			<div class="myaccount--header">
 				<h1 class="myaccount--title">{{ 'customer.account.title' | t }}</h1>
+				{% comment %} {% if customer.tags contains 'wpdnet' %} {% endcomment %}
+				{% if customer.tags contains 'wholesale' %}
+					<style>
+					  .btn {
+						background:var(--outline-button-label);
+						color:white;
+						border:1px solid var(--outline-button-label);
+						padding: 7px 30px;
+						border-radius:4px;
+						margin-bottom: 15px;
+						display: inline-block;
+					  }
+					  .btn:hover {
+						background:white !important;
+						color:var(--outline-button-label) !important;
+					  }
+					</style>
+					  <div class="wholesale-content">
+						  <!-- Content visible only to wholesale customers -->
+						  <a href="/collections/wholesale" class="btn" style="background:var(--outline-button-label);color:white;">ORDER NOW</a>
+						  <!-- Add any other custom content you want here -->
+					  </div>
+				  {% endif %}
 				<p>
 					<a href="{{ routes.account_logout_url }}" title="{{ 'customer.account.log_out' | t | escape }}" class="myaccount--link">
 		      	{% render 'svg-icons' with 'thb-log-out' %}

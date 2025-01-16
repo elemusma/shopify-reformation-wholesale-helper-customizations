@@ -278,7 +278,8 @@
 									{%- endif -%}
 								</p>
 
-								{% if customer.tags contains 'wpdnet' %}
+								{% comment %} {% if customer.tags contains 'wpdnet' %} {% endcomment %}
+								{% if customer.tags contains 'wholesale' %}
 									{% if shop.metafields.wcp_net.isNetEnabled == 'true' or shop.metafields.wcp_net.isNetEnabled == '1' %}
 									  <div style="margin-top:30px;display:none" id="wpdNetContainer">
 										<p>{{shop.metafields.wcp_net.netCartMsg}}</p>
